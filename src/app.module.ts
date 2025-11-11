@@ -1,5 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { AdminModule } from './modules/admin/admin.module';
+import { DatabaseFactory } from './setup/database.factory';
 import authConfig from "./config/auth.config";
 import cacheConfig from "./config/cache.config";
 import cloudinaryConfig from "./config/cloudinary.config";
@@ -18,7 +23,14 @@ import serverConfig from "./config/server.config";
       ],
       cache: true,
       envFilePath: getEnvFilePath(),
+      isGlobal: true,
     }),
+    TypeOrmModule.forRootAsync({
+      useClass: DatabaseFactory,
+    }),
+    UsersModule,
+    AuthModule,
+    AdminModule,
   ],
   controllers: [],
   providers: [],

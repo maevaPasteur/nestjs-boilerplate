@@ -10,6 +10,6 @@ export interface CloudinaryConfig {
 
 export default registerAs(CloudinaryConfigName, () => ({
   name: process.env.CLOUDINARY_NAME,
-  apiKey: parseInt(process.env.CLOUDINARY_API_KEY),
+  apiKey: parseInt(process.env.CLOUDINARY_API_KEY || ''),
   apiSecret: process.env.CLOUDINARY_API_SECRET,
 }));

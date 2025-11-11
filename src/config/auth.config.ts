@@ -12,6 +12,6 @@ export interface AuthConfigConfig {
 export default registerAs(AuthConfigName, () => ({
   jwtSecret: process.env.JWT_SECRET,
   jwtRefresh: process.env.JWT_REFRESH,
-  accessTokenValidity: parseInt(process.env.ACCESS_TOKEN_VALIDITY_SEC || '0'),
-  refreshTokenValidity: parseInt(process.env.REFRESH_TOKEN_VALIDITY_SEC || '0'),
+  accessTokenValidity: process.env.ACCESS_TOKEN_VALIDITY || '1d',
+  refreshTokenValidity: process.env.REFRESH_TOKEN_VALIDITY_SEC || '1d',
 }));
