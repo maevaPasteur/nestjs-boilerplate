@@ -20,6 +20,31 @@ export class UsersRepository {
     return this.userRepository.find();
   }
 
+  async findPaginated(page: number, limit: number): Promise<[User[], number]> {
+    const skip = (page - 1) * limit;
+    return this.userRepository.findAndCount({
+      skip,
+      take: limit,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
+  findAdminsPaginated(page: number, limit: number): Promise<[User[], number]> {
+    const skip = (page - 1) * limit;
+    return this.userRepository.findAndCount({
+      where: {
+        role: UserRole.ADMIN
+      },
+      skip,
+      take: limit,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
+  }
+
   async findById(id: number): Promise<User | null> {
     return this.userRepository.findOneBy({ id });
   }

@@ -19,7 +19,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { RegisterAdminDto } from './dtos/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
-import { PaginatedResult } from '../../common/interfaces/paginated-result.interface';
+import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -37,8 +37,10 @@ export class AdminController {
   }
 
   @Get('users')
-  async getAllUsers(): Promise<[User]> {
-    return this.adminService.getAllAdmins();
+  async getAllUsers(
+    @Query() paginationQuery: PaginationQueryDto
+  ): Promise<PaginatedResponse<User>> {
+    return this.adminService.getAllAdmins(paginationQuery);
   }
 
   @Delete('users/:id')

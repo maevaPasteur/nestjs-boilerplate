@@ -4,6 +4,9 @@ import { CreateUserDto } from './dtos/create-user.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
+import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import { createPaginatedResponse } from '../../common/utils/pagination.util';
 
 @Injectable()
 export class UsersService {
@@ -26,6 +29,12 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.usersRepository.findAll();
+  }
+
+  async findAllPaginated(paginationDto: PaginationQueryDto): Promise<PaginatedResponse<User>> {
+    const { page = 1, limit = 10 } = paginationDto;
+    const [items, total] = await this.usersRepository.findPaginated(page, limit);
+    return createPaginatedResponse(items, page, limit, total);
   }
 
   async findById(id: number): Promise<User> {

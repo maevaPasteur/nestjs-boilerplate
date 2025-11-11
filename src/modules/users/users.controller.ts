@@ -17,6 +17,8 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { User } from './entities/user.entity';
+import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
+import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
 
 @Controller('users')
 export class UsersController {
@@ -31,8 +33,10 @@ export class UsersController {
   }
 
   @Get()
-  async findAll(): Promise<[User]> {
-    return this.usersService.findAll();
+  async findAll(
+    @Query() paginationQuery: PaginationQueryDto
+  ): Promise<PaginatedResponse<User>> {
+    return this.usersService.findAllPaginated(paginationQuery);
   }
 
   @Get(':id')
