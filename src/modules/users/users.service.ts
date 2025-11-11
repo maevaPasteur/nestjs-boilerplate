@@ -1,10 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { UsersRepository } from './repositories/users.repository';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { ChangePasswordDto } from './dtos/change-password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
 import { createPaginatedResponse } from '../../common/utils/pagination.util';
 

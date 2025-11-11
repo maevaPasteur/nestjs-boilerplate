@@ -16,9 +16,9 @@ import { AdminService } from './admin.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
-import { RegisterAdminDto } from './dtos/register-admin.dto';
+import { RegisterAdminDto } from './dto/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
-import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
 
 @Controller('admin')

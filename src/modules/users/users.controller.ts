@@ -14,10 +14,10 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { ChangePasswordDto } from './dtos/change-password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './entities/user.entity';
-import { PaginationQueryDto } from '../../common/dtos/pagination-query.dto';
+import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
 import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
 
 @Controller('users')

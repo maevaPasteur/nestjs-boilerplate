@@ -1,8 +1,8 @@
 import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
-import { LoginDto } from './dtos/login.dto';
-import { RegisterDto } from './dtos/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { AuthConfigConfig, AuthConfigName } from "../../config/auth.config";

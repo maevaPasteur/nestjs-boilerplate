@@ -1,10 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { UsersRepository } from '../users/repositories/users.repository';
-import { RegisterAdminDto } from './dtos/register-admin.dto';
+import { RegisterAdminDto } from './dto/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
-import { PaginationQueryDto } from "../../common/dtos/pagination-query.dto";
+import { PaginationQueryDto } from "../../common/dto/pagination-query.dto";
 import { createPaginatedResponse } from "../../common/utils/pagination.util";
 
 @Injectable()

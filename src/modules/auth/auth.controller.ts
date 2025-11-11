@@ -8,9 +8,9 @@ import {
   ValidationPipe, UseGuards,
 } from '@nestjs/common';
 import { AuthService, AuthTokens } from './auth.service';
-import { LoginDto } from './dtos/login.dto';
-import { RegisterDto } from './dtos/register.dto';
-import { RefreshTokenDto } from './dtos/refresh-token.dto';
+import { LoginDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { User } from '../users/entities/user.entity';
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { CurrentUser } from "./decorators/current-user.decorators";
