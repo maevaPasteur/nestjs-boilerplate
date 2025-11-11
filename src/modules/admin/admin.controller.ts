@@ -8,6 +8,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -17,6 +18,8 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RegisterAdminDto } from './dtos/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
+import { PaginationDto } from '../../common/dtos/pagination.dto';
+import { PaginatedResult } from '../../common/interfaces/paginated-result.interface';
 
 @Controller('admin')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -34,8 +37,10 @@ export class AdminController {
   }
 
   @Get('users')
-  async getAllAdmins(): Promise<User[]> {
-    return this.adminService.getAllAdmins();
+  async getAllUsers(
+    @Query() paginationDto: PaginationDto,
+  ): Promise<PaginatedResult<User>> {
+    return this.adminService.getAllUsersPaginated(paginationDto);
   }
 
   @Delete('users/:id')

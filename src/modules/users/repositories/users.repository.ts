@@ -48,4 +48,12 @@ export class UsersRepository {
   async findByRole(role: UserRole): Promise<User[]> {
     return this.userRepository.find({ where: { role } });
   }
+
+  async findAllPaginated(paginationDto: any, options?: any) {
+    return this.userRepository.findAndCount({
+      ...options,
+      skip: paginationDto.skip,
+      take: paginationDto.take,
+    });
+  }
 }
