@@ -3,8 +3,6 @@ import { UsersRepository } from './repositories/users.repository';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { User } from './entities/user.entity';
-import { PaginationDto } from '../../common/dtos/pagination.dto';
-import { PaginatedResult, PaginationMeta } from '../../common/interfaces/paginated-result.interface';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -28,16 +26,6 @@ export class UsersService {
 
   async findAll(): Promise<User[]> {
     return this.usersRepository.findAll();
-  }
-
-  async findAllPaginated(paginationDto: PaginationDto): Promise<PaginatedResult<User>> {
-    const [data, total] = await this.usersRepository.findAllPaginated(paginationDto);
-    const meta = new PaginationMeta(total, paginationDto.page!, paginationDto.limit!);
-    
-    return {
-      data,
-      meta,
-    };
   }
 
   async findById(id: number): Promise<User> {
