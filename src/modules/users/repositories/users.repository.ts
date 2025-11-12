@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User, UserRole } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
+import { SortOrder } from "../../../common/dto/pagination-query.dto";
+import { UserSortableFields } from '../dto/users-pagination.dto';
 
 @Injectable()
 export class UsersRepository {
@@ -20,18 +22,28 @@ export class UsersRepository {
     return this.userRepository.find();
   }
 
-  async findPaginated(page: number, limit: number): Promise<[User[], number]> {
+  async findPaginated(
+    page: number,
+    limit: number,
+    sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
+    sortOrder: SortOrder = SortOrder.DESC
+  ): Promise<[User[], number]> {
     const skip = (page - 1) * limit;
     return this.userRepository.findAndCount({
       skip,
       take: limit,
       order: {
-        createdAt: 'DESC',
+        [sortBy]: sortOrder,
       },
     });
   }
 
-  findAdminsPaginated(page: number, limit: number): Promise<[User[], number]> {
+  findAdminsPaginated(
+    page: number,
+    limit: number,
+    sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
+    sortOrder: SortOrder = SortOrder.DESC
+  ): Promise<[User[], number]> {
     const skip = (page - 1) * limit;
     return this.userRepository.findAndCount({
       where: {
@@ -40,7 +52,7 @@ export class UsersRepository {
       skip,
       take: limit,
       order: {
-        createdAt: 'DESC',
+        [sortBy]: sortOrder,
       },
     });
   }

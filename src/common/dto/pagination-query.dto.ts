@@ -1,5 +1,10 @@
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Max, Min } from "class-validator";
+import { IsInt, IsOptional, Max, Min, IsString, Matches, IsEnum } from "class-validator";
+
+export enum SortOrder {
+  ASC = 'ASC',
+  DESC = 'DESC',
+}
 
 export class PaginationQueryDto {
   @IsOptional()
@@ -14,4 +19,17 @@ export class PaginationQueryDto {
   @Min(1, {message: 'Limit must be at least 1'})
   @Max(100, {message: `Limit can't exceed 100`})
   limit?: number = 10;
+
+  @IsOptional()
+  @IsString()
+  @Matches(/^[a-zA-Z0-9_]+$/, {
+    message: 'Sort field must contain only letters, numbers and underscores'
+  })
+  sortBy?: string;
+
+  @IsOptional()
+  @IsEnum(SortOrder, {
+    message: 'Sort order must be either ASC or DESC'
+  })
+  sortOrder?: SortOrder = SortOrder.DESC;
 }

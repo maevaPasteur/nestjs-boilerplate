@@ -18,7 +18,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { RegisterAdminDto } from './dto/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { UsersPaginationDto } from '../users/dto/users-pagination.dto';
 import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
 
 @Controller('admin')
@@ -38,7 +38,7 @@ export class AdminController {
 
   @Get('users')
   async getAllUsers(
-    @Query() paginationQuery: PaginationQueryDto
+    @Query() paginationQuery: UsersPaginationDto
   ): Promise<PaginatedResponse<User>> {
     return this.adminService.getAllAdmins(paginationQuery);
   }

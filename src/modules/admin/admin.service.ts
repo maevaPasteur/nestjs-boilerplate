@@ -4,8 +4,9 @@ import { UsersRepository } from '../users/repositories/users.repository';
 import { RegisterAdminDto } from './dto/register-admin.dto';
 import { User, UserRole } from '../users/entities/user.entity';
 import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
-import { PaginationQueryDto } from "../../common/dto/pagination-query.dto";
+import { UsersPaginationDto } from "../users/dto/users-pagination.dto";
 import { createPaginatedResponse } from "../../common/utils/pagination.util";
+import { UserSortableFields } from "../users/dto/users-pagination.dto";
 
 @Injectable()
 export class AdminService {
@@ -23,9 +24,9 @@ export class AdminService {
     return this.usersService.create(createUserData);
   }
 
-  async getAllAdmins(paginationDto: PaginationQueryDto): Promise<PaginatedResponse<User>> {
-    const { page = 1, limit = 10 } = paginationDto;
-    const [items, total] = await this.usersRepository.findAdminsPaginated(page, limit);
+  async getAllAdmins(paginationDto: UsersPaginationDto): Promise<PaginatedResponse<User>> {
+    const { page = 1, limit = 10, sortBy = UserSortableFields.CREATED_AT, sortOrder } = paginationDto;
+    const [items, total] = await this.usersRepository.findAdminsPaginated(page, limit, sortBy, sortOrder);
     return createPaginatedResponse(items, page, limit, total);
   }
 

@@ -4,9 +4,10 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
-import { PaginationQueryDto } from '../../common/dto/pagination-query.dto';
+import { UsersPaginationDto } from './dto/users-pagination.dto';
 import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
 import { createPaginatedResponse } from '../../common/utils/pagination.util';
+import { UserSortableFields } from "./dto/users-pagination.dto";
 
 @Injectable()
 export class UsersService {
@@ -31,9 +32,9 @@ export class UsersService {
     return this.usersRepository.findAll();
   }
 
-  async findAllPaginated(paginationDto: PaginationQueryDto): Promise<PaginatedResponse<User>> {
-    const { page = 1, limit = 10 } = paginationDto;
-    const [items, total] = await this.usersRepository.findPaginated(page, limit);
+  async findAllPaginated(paginationDto: UsersPaginationDto): Promise<PaginatedResponse<User>> {
+    const { page = 1, limit = 10, sortBy = UserSortableFields.CREATED_AT, sortOrder } = paginationDto;
+    const [items, total] = await this.usersRepository.findPaginated(page, limit, sortBy, sortOrder);
     return createPaginatedResponse(items, page, limit, total);
   }
 
