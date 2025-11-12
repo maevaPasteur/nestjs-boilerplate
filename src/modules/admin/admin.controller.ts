@@ -22,8 +22,8 @@ import { UsersPaginationDto } from '../users/dto/users-pagination.dto';
 import { PaginatedResponse } from "../../common/interfaces/pagination.interface";
 
 @Controller('admin')
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Roles(UserRole.ADMIN)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
@@ -40,12 +40,6 @@ export class AdminController {
   async getAllUsers(
     @Query() paginationQuery: UsersPaginationDto
   ): Promise<PaginatedResponse<User>> {
-    return this.adminService.getAllAdmins(paginationQuery);
-  }
-
-  @Delete('users/:id')
-  @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteAdmin(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.adminService.deleteAdmin(id);
+    return this.adminService.findAll(paginationQuery);
   }
 }

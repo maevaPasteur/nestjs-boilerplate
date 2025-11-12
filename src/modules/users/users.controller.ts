@@ -16,9 +16,13 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { UsersPaginationDto } from './dto/users-pagination.dto';
 import { PaginatedResponse } from '../../common/interfaces/pagination.interface';
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { OwnerOrRoleGuard } from "../../common/guards/owner-or-role.guard";
+import { Roles } from "../auth/decorators/roles.decorator";
+import { CurrentUser } from "../auth/decorators/current-user.decorators";
 
 @Controller('users')
 export class UsersController {
@@ -36,7 +40,7 @@ export class UsersController {
   async findAll(
     @Query() paginationQuery: UsersPaginationDto
   ): Promise<PaginatedResponse<User>> {
-    return this.usersService.findAllPaginated(paginationQuery);
+    return this.usersService.findAll(paginationQuery);
   }
 
   @Get(':id')
@@ -63,7 +67,11 @@ export class UsersController {
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async remove(@Param('id', ParseIntPipe) id: number): Promise<void> {
-    return this.usersService.remove(id);
+  @UseGuards(JwtAuthGuard)
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @CurrentUser() currentUser: User
+  ): Promise<void> {
+    return this.usersService.remove(id, currentUser);
   }
 }

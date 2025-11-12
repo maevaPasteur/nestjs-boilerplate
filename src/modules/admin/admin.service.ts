@@ -24,19 +24,9 @@ export class AdminService {
     return this.usersService.create(createUserData);
   }
 
-  async getAllAdmins(paginationDto: UsersPaginationDto): Promise<PaginatedResponse<User>> {
+  async findAll(paginationDto: UsersPaginationDto): Promise<PaginatedResponse<User>> {
     const { page = 1, limit = 10, sortBy = UserSortableFields.CREATED_AT, sortOrder } = paginationDto;
-    const [items, total] = await this.usersRepository.findAdminsPaginated(page, limit, sortBy, sortOrder);
+    const [items, total] = await this.usersRepository.findAdmins(page, limit, sortBy, sortOrder);
     return createPaginatedResponse(items, page, limit, total);
-  }
-
-  async deleteAdmin(id: number): Promise<void> {
-    const user = await this.usersService.findById(id);
-    
-    if (user.role !== UserRole.ADMIN) {
-      throw new BadRequestException('User is not an admin');
-    }
-
-    return this.usersService.remove(id);
   }
 }

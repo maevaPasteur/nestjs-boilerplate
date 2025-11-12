@@ -10,6 +10,7 @@ import { AuthConfigConfig, AuthConfigName } from "../../config/auth.config";
 export interface JwtPayload {
   sub: string;
   email: string;
+  role: UserRole,
   iat?: number;
   exp?: number;
 }
@@ -98,6 +99,7 @@ export class AuthService {
     const payload: JwtPayload = {
       sub: `${user.id}`,
       email: user.email,
+      role: user.role
     };
 
     const authConfig = this.configService.getOrThrow<AuthConfigConfig>(AuthConfigName);

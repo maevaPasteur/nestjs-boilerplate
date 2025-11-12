@@ -1,10 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, FindManyOptions } from 'typeorm';
 import { User, UserRole } from '../entities/user.entity';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { SortOrder } from "../../../common/dto/pagination-query.dto";
 import { UserSortableFields } from '../dto/users-pagination.dto';
+
+interface PaginationOptions {
+  page: number;
+  limit: number;
+  sortBy?: UserSortableFields;
+  sortOrder?: SortOrder;
+}
+
+interface UserFilters {
+  role?: UserRole;
+  isActive?: boolean;
+  email?: string;
+}
 
 @Injectable()
 export class UsersRepository {
@@ -18,43 +31,44 @@ export class UsersRepository {
     return this.userRepository.save(user);
   }
 
-  async findAll(): Promise<User[]> {
-    return this.userRepository.find();
-  }
-
-  async findPaginated(
+  async findUsers(
     page: number,
     limit: number,
     sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
     sortOrder: SortOrder = SortOrder.DESC
   ): Promise<[User[], number]> {
-    const skip = (page - 1) * limit;
-    return this.userRepository.findAndCount({
-      skip,
-      take: limit,
-      order: {
-        [sortBy]: sortOrder,
-      },
-    });
+    return this.findPaginatedWithFilters({ page, limit, sortBy, sortOrder });
   }
 
-  findAdminsPaginated(
+  async findAdmins(
     page: number,
     limit: number,
     sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
     sortOrder: SortOrder = SortOrder.DESC
   ): Promise<[User[], number]> {
-    const skip = (page - 1) * limit;
-    return this.userRepository.findAndCount({
-      where: {
-        role: UserRole.ADMIN
-      },
-      skip,
+    return this.findPaginatedWithFilters(
+      { page, limit, sortBy, sortOrder },
+      { role: UserRole.ADMIN }
+    );
+  }
+
+  private async findPaginatedWithFilters(
+    options: PaginationOptions,
+    filters: UserFilters = {}
+  ): Promise<[User[], number]> {
+    const { page, limit, sortBy = UserSortableFields.CREATED_AT, sortOrder = SortOrder.DESC } = options;
+    
+    const findOptions: FindManyOptions<User> = {
+      skip: (page - 1) * limit,
       take: limit,
-      order: {
-        [sortBy]: sortOrder,
-      },
-    });
+      order: { [sortBy]: sortOrder },
+    };
+
+    if (Object.keys(filters).length > 0) {
+      findOptions.where = filters;
+    }
+
+    return this.userRepository.findAndCount(findOptions);
   }
 
   async findById(id: number): Promise<User | null> {
@@ -86,11 +100,28 @@ export class UsersRepository {
     return this.userRepository.find({ where: { role } });
   }
 
-  async findAllPaginated(paginationDto: any, options?: any) {
-    return this.userRepository.findAndCount({
-      ...options,
-      skip: paginationDto.skip,
-      take: paginationDto.take,
-    });
+  async findByRolePaginated(
+    role: UserRole,
+    page: number,
+    limit: number,
+    sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
+    sortOrder: SortOrder = SortOrder.DESC
+  ): Promise<[User[], number]> {
+    return this.findPaginatedWithFilters(
+      { page, limit, sortBy, sortOrder },
+      { role }
+    );
+  }
+
+  async findActiveUsersPaginated(
+    page: number,
+    limit: number,
+    sortBy: UserSortableFields = UserSortableFields.CREATED_AT,
+    sortOrder: SortOrder = SortOrder.DESC
+  ): Promise<[User[], number]> {
+    return this.findPaginatedWithFilters(
+      { page, limit, sortBy, sortOrder },
+      { isActive: true }
+    );
   }
 }
