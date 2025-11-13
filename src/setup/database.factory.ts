@@ -27,7 +27,7 @@ export class DatabaseFactory implements TypeOrmOptionsFactory {
       database: name,
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
       synchronize: serverConfig.nodeEnv !== 'production',
-      logging: serverConfig.nodeEnv === 'development',
+      logging: ['warn', 'error'],
       migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
       migrationsTableName: 'migrations',
       extra: {

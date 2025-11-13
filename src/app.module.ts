@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ScheduleModule } from '@nestjs/schedule';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { AdminModule } from './modules/admin/admin.module';
@@ -10,6 +12,10 @@ import cacheConfig from "./config/cache.config";
 import cloudinaryConfig from "./config/cloudinary.config";
 import databaseConfig from "./config/database.config";
 import serverConfig from "./config/server.config";
+import { CacheModule } from './infrastructure/cache/cache.module';
+import { RedisModule } from './infrastructure/redis/redis.module';
+import { HealthModule } from './infrastructure/health/health.module';
+import { SmartCacheInterceptor } from "./infrastructure/cache/interceptors/cache.interceptor";
 
 @Module({
   imports: [
@@ -28,12 +34,21 @@ import serverConfig from "./config/server.config";
     TypeOrmModule.forRootAsync({
       useClass: DatabaseFactory,
     }),
+    ScheduleModule.forRoot(),
+    CacheModule.forRoot(),
+    RedisModule,
+    HealthModule,
     UsersModule,
     AuthModule,
     AdminModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: SmartCacheInterceptor,
+    },
+  ],
 })
 export class AppModule {}
 

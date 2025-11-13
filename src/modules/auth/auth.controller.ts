@@ -14,6 +14,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { User } from '../users/entities/user.entity';
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { CurrentUser } from "./decorators/current-user.decorators";
+import { NoCache } from "../../common/decorators/no-cache.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -43,6 +44,7 @@ export class AuthController {
     return this.authService.refreshTokens(refreshTokenDto.refreshToken);
   }
 
+  @NoCache()
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@CurrentUser() user: any): Promise<User> {
